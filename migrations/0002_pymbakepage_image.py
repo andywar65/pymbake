@@ -7,7 +7,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wagtailimages', '0021_image_file_hash'),
         ('pymbake', '0001_initial'),
     ]
 
