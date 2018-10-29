@@ -115,6 +115,14 @@ class PymbakePartitionPageLayers(Orderable):
 
 class PymbakePage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Project description",)
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Landscape mode only; horizontal width between 1000px and 3000px.'
+    )
     equirectangular_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -139,15 +147,18 @@ class PymbakePage(Page):
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('intro'),
-        DocumentChooserPanel('dxf_file'),
-        ImageChooserPanel('equirectangular_image'),
         MultiFieldPanel([
+            FieldPanel('intro'),
+            ImageChooserPanel('image'),
+        ], heading="Presentation"),
+        MultiFieldPanel([
+            DocumentChooserPanel('dxf_file'),
+            ImageChooserPanel('equirectangular_image'),
             FieldPanel('shadows'),
             FieldPanel('fly_camera'),
             FieldPanel('double_face'),
-        ], heading="Visual settings"),
-        InlinePanel('material_images', label="Material Image Gallery",),
+        ], heading="VR settings"),
+        InlinePanel('material_images', label="Material Gallery",),
     ]
 
     def get_partition_children(self):
