@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0040_page_draft_title'),
-        ('wagtailimages', '0021_image_file_hash'),
         ('wagtaildocs', '0008_document_file_size'),
     ]
 
