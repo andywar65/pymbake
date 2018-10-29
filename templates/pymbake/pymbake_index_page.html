@@ -18,6 +18,14 @@
                                 <h2 class="blog-list-title">{{ blog.title }}</h2>
                                 <p>{{ blog.intro|truncatewords:15 }}</p>
                             </div>
+                            <div class="small footer">
+                                {% if blog.date_published %}
+                                    {{ blog.date_published }} by
+                                {% endif %}
+                                {% for author in blog.authors %}
+                                    {{ author }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </div>
                         </a>
                     </li>
                 {% endfor %}

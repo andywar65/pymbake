@@ -13,6 +13,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtail.documents.models import Document
 from wagtail.documents.edit_handlers import DocumentChooserPanel
+from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 class PymbakeFinishingPage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Finishing description",)
@@ -113,6 +114,24 @@ class PymbakePartitionPageLayers(Orderable):
         FieldPanel('weight'),
     ]
 
+class PYMbakePeopleRelationship(Orderable, models.Model):
+    """
+    This defines the relationship between the `People` within the `base`
+    app and the PymbakePage below. This allows People to be added to a BlogPage.
+
+    We have created a two way relationship between PymbakePage and People using
+    the ParentalKey and ForeignKey
+    """
+    page = ParentalKey(
+        'PymbakePage', related_name='pymbake_person_relationship', on_delete=models.CASCADE
+    )
+    people = models.ForeignKey(
+        'base.People', related_name='person_pymbake_relationship', on_delete=models.CASCADE
+    )
+    panels = [
+        SnippetChooserPanel('people')
+    ]
+
 class PymbakePage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Project description",)
     image = models.ForeignKey(
@@ -123,6 +142,9 @@ class PymbakePage(Page):
         related_name='+',
         help_text='Landscape mode only; horizontal width between 1000px and 3000px.'
     )
+    date_published = models.DateField(
+        "Date article published", blank=True, null=True
+        )
     equirectangular_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -150,6 +172,10 @@ class PymbakePage(Page):
         MultiFieldPanel([
             FieldPanel('intro'),
             ImageChooserPanel('image'),
+            FieldPanel('date_published'),
+            InlinePanel(
+                'pymbake_person_relationship', label="Author(s)",
+                panels=None, min_num=1),
         ], heading="Presentation"),
         MultiFieldPanel([
             DocumentChooserPanel('dxf_file'),
@@ -193,6 +219,20 @@ class PymbakePage(Page):
     def get_csv_path(self):
         path_to_csv = os.path.join(settings.MEDIA_URL, 'documents', self.slug + '.csv')
         return path_to_csv
+
+    def authors(self):
+        """
+        Returns the PymbakePage's related People. Again note that we are using
+        the ParentalKey's related_name from the PymbakePeopleRelationship model
+        to access these objects. This allows us to access the People objects
+        with a loop on the template. If we tried to access the blog_person_
+        relationship directly we'd print `blog.PymbakePeopleRelationship.None`
+        """
+        authors = [
+            n.people for n in self.pymbake_person_relationship.all()
+        ]
+
+        return authors
 
 class PymbakePageMaterialImage(Orderable):
     page = ParentalKey(PymbakePage, related_name='material_images')
