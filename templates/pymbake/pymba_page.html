@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-pymbapage{% endblock %}
+
+{% block content %}
+            <script type="text/javascript" src="{% static 'pymba/js/aframe-v0.8.2.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'pymba/js/aframe-look-at-component.min.js' %}"></script>
+        <a-scene style="width: 100%; height: 768px" embedded>
+          <a-assets>
+			   <img id="default-sky" src="{% static 'pymba/images/target.png' %}">
+			{% with equirectangular_image=page.equirectangular_image %}
+			 {% if equirectangular_image %}
+			  {% image equirectangular_image original as temp_image %}
+			   <img id="sky" src="{{ temp_image.url }}">
+			  {% else %}
+			   <img id="sky" src="{% static 'pymba/images/target.png' %}">
+			 {% endif %}
+			{% endwith %}
+
+			  {% for material in page.material_images.all %}
+			   {% if material.image %}
+			    {% image material.image original as temp_image %}
+			     <img id="image-{{ material.layer }}"
+			     src="{{ temp_image.url }}">
+			   {% endif %}
+			  {% endfor %}
+
+			  {% for part in page.get_partition_children %}
+			   {% if part.specific.image %}
+			    {% image part.specific.image original as temp_image %}
+			     <img id="image-partition-{{ part }}"
+			     src="{{ temp_image.url }}">
+			   {% endif %}
+			  {% endfor %}
+
+			  {% for finishing in page.get_finishing_children %}
+			   {% if finishing.specific.image %}
+			    {% image finishing.specific.image original as temp_image %}
+			     <img id="image-finishing-{{ finishing }}"
+			     src="{{ temp_image.url }}">
+			   {% endif %}
+			   {% if finishing.specific.tiling_image %}
+			    {% image finishing.specific.tiling_image original as temp_image %}
+			     <img id="image-tiling-{{ finishing }}"
+			     src="{{ temp_image.url }}">
+			   {% endif %}
+			   {% if finishing.specific.skirting_image %}
+			    {% image finishing.specific.skirting_image original as temp_image %}
+			     <img id="image-skirting-{{ finishing }}"
+			     src="{{ temp_image.url }}">
+			   {% endif %}
+			  {% endfor %}
+
+		</a-assets>
+		{% with shadows=page.shadows %}
+			<a-entity id="dxf-ent" shadow="receive: {{ shadows|lower }}; cast: {{ shadows|lower }}"
+		{% endwith %}
+            position="0 0 0"
+            rotation="0 0 0">
+			{% with elements=page.extract_dxf %}
+			 {% if elements %}
+				{% for key, value in elements.items %}
+				{{ value|safe }}
+				{% endfor %}
+			 {% endif %}
+			{% endwith %}
+        </a-entity>
+            <a-sky src="#sky"></a-sky>
+            <a-entity id="camera-ent">
+				{% with fly_camera=page.fly_camera %}
+                  <a-camera id="camera" wasd-controls="fly: {{ fly_camera|lower }}">
+				{% endwith %}
+                    <a-light type="point"></a-light>
+                    <a-entity position="0 -1.6 0" id="camera-foot"></a-entity>
+                    <a-cursor color="#2E3A87"></a-cursor>
+                  </a-camera>
+            </a-entity>
+        </a-scene>
+			{% with csv_path=page.get_csv_path %}
+            <br><a id="csv-file" href="{{ csv_path }}">Download CSV file</a>
+			{% endwith %}
+{% endblock %}
