@@ -1,5 +1,5 @@
 import os
-from pymba import aframe
+from pymbake import aframe
 
 from django import forms
 from django.db import models
@@ -14,7 +14,7 @@ from wagtail.search import index
 from wagtail.documents.models import Document
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 
-class PymbaFinishingPage(Page):
+class PymbakeFinishingPage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Finishing description",)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -74,7 +74,7 @@ class PymbaFinishingPage(Page):
         ], heading="Skirting"),
     ]
 
-class PymbaPartitionPage(Page):
+class PymbakePartitionPage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Partition description",)
     image = models.ForeignKey(
         'wagtailimages.Image',
@@ -101,8 +101,8 @@ class PymbaPartitionPage(Page):
         InlinePanel('part_layers', label="Partition layers",),
     ]
 
-class PymbaPartitionPageLayers(Orderable):
-    page = ParentalKey(PymbaPartitionPage, related_name='part_layers')
+class PymbakePartitionPageLayers(Orderable):
+    page = ParentalKey(PymbakePartitionPage, related_name='part_layers')
     material = models.CharField(max_length=250, default="brick", help_text="Material description",)
     thickness = models.CharField(max_length=250, default="0", help_text="In centimeters",)
     weight = models.CharField(max_length=250, default="0", help_text="In kilos per cubic meter",)
@@ -113,7 +113,7 @@ class PymbaPartitionPageLayers(Orderable):
         FieldPanel('weight'),
     ]
 
-class PymbaPage(Page):
+class PymbakePage(Page):
     intro = models.CharField(max_length=250, null=True, blank=True, help_text="Project description",)
     equirectangular_image = models.ForeignKey(
         'wagtailimages.Image',
@@ -151,11 +151,11 @@ class PymbaPage(Page):
     ]
 
     def get_partition_children(self):
-        partition_children = self.get_children().type(PymbaPartitionPage).all()
+        partition_children = self.get_children().type(PymbakePartitionPage).all()
         return partition_children
 
     def get_finishing_children(self):
-        finishing_children = self.get_children().type(PymbaFinishingPage).all()
+        finishing_children = self.get_children().type(PymbakeFinishingPage).all()
         return finishing_children
 
     def extract_dxf(self):
@@ -172,8 +172,8 @@ class PymbaPage(Page):
         csv_f = open(path_to_csv, 'w', encoding = 'utf-8',)
         csv_f.write('Elem,Layer,Block,Surf,Strip,Type,X,Y,Z,Rx,Ry,Rz,Width,Depth,Height,Weight, Alert \n')
 
-        partitions = PymbaPartitionPage.objects#how can I restrict to children?TO DO
-        finishings = PymbaFinishingPage.objects#how can I restrict to children?TO DO
+        partitions = PymbakePartitionPage.objects#how can I restrict to children?TO DO
+        finishings = PymbakeFinishingPage.objects#how can I restrict to children?TO DO
         output = aframe.make_html(self, collection, partitions, finishings, csv_f)
         csv_f.close()
 
@@ -183,8 +183,8 @@ class PymbaPage(Page):
         path_to_csv = os.path.join(settings.MEDIA_URL, 'documents', self.slug + '.csv')
         return path_to_csv
 
-class PymbaPageMaterialImage(Orderable):
-    page = ParentalKey(PymbaPage, related_name='material_images')
+class PymbakePageMaterialImage(Orderable):
+    page = ParentalKey(PymbakePage, related_name='material_images')
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -206,7 +206,7 @@ class PymbaPageMaterialImage(Orderable):
         FieldPanel('color'),
     ]
 
-class PymbaIndexPage(Page):
+class PymbakeIndexPage(Page):
     introduction = models.TextField(
         help_text='Text to describe the page',
         blank=True)
@@ -215,10 +215,10 @@ class PymbaIndexPage(Page):
         FieldPanel('introduction', classname="full"),
     ]
 
-    # Speficies that only PymbaPage objects can live under this index page
-    subpage_types = ['PymbaPage']
+    # Speficies that only PymbakePage objects can live under this index page
+    subpage_types = ['PymbakePage']
 
-    # Defines a method to access the children of the page (e.g. PymbaPage
+    # Defines a method to access the children of the page (e.g. PymbakePage
     # objects).
     def children(self):
         return self.get_children().specific().live()
@@ -227,8 +227,8 @@ class PymbaIndexPage(Page):
     # date that they were published
     # http://docs.wagtail.io/en/latest/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
-        context = super(PymbaIndexPage, self).get_context(request)
-        context['posts'] = PymbaPage.objects.descendant_of(
+        context = super(PymbakeIndexPage, self).get_context(request)
+        context['posts'] = PymbakePage.objects.descendant_of(
             self).live().order_by(
             '-first_published_at')
         return context
