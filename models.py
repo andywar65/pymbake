@@ -16,7 +16,7 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 class PymbakeFinishingPage(Page):
-    intro = models.CharField(max_length=250, null=True, blank=True, help_text="Finishing description",)
+    introduction = models.CharField(max_length=250, null=True, blank=True, help_text="Finishing description",)
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -51,11 +51,11 @@ class PymbakeFinishingPage(Page):
     skirting_color = models.CharField(max_length=250, default="white", help_text="Accepts hex (#ffffff) or HTML color",)
 
     search_fields = Page.search_fields + [
-        index.SearchField('intro'),
+        index.SearchField('introduction'),
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('intro'),
+        FieldPanel('introduction'),
         MultiFieldPanel([
             ImageChooserPanel('image'),
             FieldPanel('pattern'),
@@ -76,7 +76,7 @@ class PymbakeFinishingPage(Page):
     ]
 
 class PymbakePartitionPage(Page):
-    intro = models.CharField(max_length=250, null=True, blank=True, help_text="Partition description",)
+    introduction = models.CharField(max_length=250, null=True, blank=True, help_text="Partition description",)
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -89,11 +89,11 @@ class PymbakePartitionPage(Page):
     color = models.CharField(max_length=250, null=True, blank=True, help_text="Accepts hex (#ffffff) or HTML color",)
 
     search_fields = Page.search_fields + [
-        index.SearchField('intro'),
+        index.SearchField('introduction'),
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('intro'),
+        FieldPanel('introduction'),
         MultiFieldPanel([
             ImageChooserPanel('image'),
             FieldPanel('pattern'),
@@ -133,7 +133,7 @@ class PYMbakePeopleRelationship(Orderable, models.Model):
     ]
 
 class PymbakePage(Page):
-    intro = models.CharField(max_length=250, null=True, blank=True, help_text="Project description",)
+    introduction = models.CharField(max_length=250, null=True, blank=True, help_text="Project description",)
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -165,12 +165,12 @@ class PymbakePage(Page):
     double_face = models.BooleanField(default=False, help_text="Planes are visible on both sides?",)
 
     search_fields = Page.search_fields + [
-        index.SearchField('intro'),
+        index.SearchField('introduction'),
     ]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
-            FieldPanel('intro'),
+            FieldPanel('introduction'),
             ImageChooserPanel('image'),
             FieldPanel('date_published'),
             InlinePanel(

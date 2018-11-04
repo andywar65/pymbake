@@ -72,4 +72,4 @@ BIM element data is stored in a `CSV` file downloadable from the frontend. Data 
 
 ### Next improvements
 
-Add animation to lights. Make furniture. Add finishing to doors. Upgrade Partition / Finishing Pages.
+Make furniture. Add finishing to doors. Upgrade Partition / Finishing Pages.
