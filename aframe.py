@@ -292,7 +292,7 @@ def reference_animations(collection):#TODO
         if data['2'] == 'a-animation':
             collection[x] = data
             for x2, data2 in collection2.items():
-                if data2['2'] != '3dface' or data2['2'] != 'a-wall' or data2['2'] != 'a-openwall' or data2['2'] != 'a-door' or data2['2'] != 'a-light':
+                if data2['2'] != '3dface' or data2['2'] != 'a-wall' or data2['2'] != 'a-openwall' or data2['2'] != 'a-door':
                     if data['10']==data2['10'] and data['20']==data2['20'] and data['30']==data2['30']:
                         data2['animation'] = True
                         data2['ATTRIBUTE'] = data['ATTRIBUTE']
@@ -663,13 +663,13 @@ def make_light(page_obj, x, data):
     try:
         if data['type'] == 'ambient':
             outstr += f'light="type: ambient; color: {data["color"]}; intensity: {data["intensity"]}; '
-            outstr += '">\n</a-entity>\n'#close light entity
+            outstr += '">\n'
         elif data['type'] == 'point':
             outstr += f'light="type: point; color: {data["color"]}; intensity: {data["intensity"]}; '
             outstr += f'decay: {data["decay"]}; distance: {data["distance"]}; '
             if page_obj.shadows:
                 outstr += 'castShadow: true; '
-            outstr += '"> \n</a-entity>\n'#close light entity
+            outstr += '"> \n'
         elif data['type'] == 'spot':
             outstr += f'light="type: spot; color: {data["color"]}; intensity: {data["intensity"]}; '
             outstr += f'decay: {data["decay"]}; distance: {data["distance"]}; '
@@ -677,18 +677,22 @@ def make_light(page_obj, x, data):
             if page_obj.shadows:
                 outstr += 'castShadow: true; '
             outstr += f'target: #light-{x}-target;"> \n'
-            outstr += f'<a-entity id="light-{x}-target" position="0 -1 0"> </a-entity> \n</a-entity> \n'#close light entity
+            outstr += f'<a-entity id="light-{x}-target" position="0 -1 0"> </a-entity> \n'
         else:#defaults to directional
             outstr += f'light="type: directional; color: {data["color"]}; intensity: {data["intensity"]}; '
             if page_obj.shadows:
                 outstr += 'castShadow: true; '
             outstr += f'target: #light-{x}-target;"> \n'
-            outstr += f'<a-entity id="light-{x}-target" position="0 -1 0"> </a-entity> \n</a-entity> \n'#close light entity
+            outstr += f'<a-entity id="light-{x}-target" position="0 -1 0"> </a-entity> \n'
     except KeyError:#default if no light type is set
         outstr += 'light="type: point; intensity: 0.75; distance: 50; decay: 2; '
         if page_obj.shadows:
             outstr += 'castShadow: true;'
-        outstr += '">\n</a-entity>\n'#close light entity
+        outstr += '">\n'
+
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-entity>\n'#close light entity
     return outstr
 
 class APartition(object):
