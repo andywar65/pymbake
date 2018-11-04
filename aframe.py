@@ -292,7 +292,7 @@ def reference_animations(collection):#TODO
         if data['2'] == 'a-animation':
             collection[x] = data
             for x2, data2 in collection2.items():
-                if data2['2'] != '3dface' or data2['2'] != 'a-wall' or data2['2'] != 'a-openwall' or data2['2'] != 'a-door':
+                if data2['2'] != '3dface' or data2['2'] != 'a-wall' or data2['2'] != 'a-openwall' or data2['2'] != 'a-door' or data2['2'] != 'a-light':
                     if data['10']==data2['10'] and data['20']==data2['20'] and data['30']==data2['30']:
                         data2['animation'] = True
                         data2['ATTRIBUTE'] = data['ATTRIBUTE']
@@ -448,7 +448,10 @@ def make_cone(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-cone>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-cone>\n</a-entity>\n'
     return outstr
 
 def make_circle(x, data):
@@ -472,7 +475,10 @@ def make_circle(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-circle>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-circle>\n</a-entity>\n'
     return outstr
 
 def make_cylinder(x, data):
@@ -503,7 +509,10 @@ def make_cylinder(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-cylinder>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-cylinder>\n</a-entity>\n'
     return outstr
 
 def make_curvedimage(x, data):
@@ -523,6 +532,8 @@ def make_curvedimage(x, data):
     except KeyError:
         pass
     outstr += f'src="#image-{data["8"]}">\n'
+    if data['animation']:
+        outstr += is_animation(data)
     outstr += '</a-curvedimage>\n</a-entity>\n'
     return outstr
 
@@ -554,7 +565,10 @@ def make_sphere(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-sphere>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-sphere>\n</a-entity>\n'
     return outstr
 
 def make_plane(x, data):
@@ -581,7 +595,10 @@ def make_plane(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-plane>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-plane>\n</a-entity>\n'
     return outstr
 
 def make_text(x, data):
@@ -590,7 +607,10 @@ def make_text(x, data):
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}"\n'
     outstr += f'text="width: {data["41"]}; align: {data["align"]}; color: {data["color"]}; '
     outstr += f'value: {data["text"]}; wrap-count: {data["wrap-count"]}; '
-    outstr += '">\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-entity>\n'
     return outstr
 
 def make_link(page_obj, x, data):
@@ -606,17 +626,23 @@ def make_link(page_obj, x, data):
         target = page_obj.get_prev_sibling()
     else:#we default to next sibling
         target = page_obj.get_next_sibling()
-    if target:
-        outstr += f'href="{target.url}"\n'
-        outstr += f'title="{data["title"]}" color="{data["color"]}" on="click"\n'
-        eq_image = target.specific.equirectangular_image
-        if eq_image:
-            outstr += f'image="{eq_image.file.url}"'
+    try:
+        if target:
+            outstr += f'href="{target.url}"\n'
+            outstr += f'title="{data["title"]}" color="{data["color"]}" on="click"\n'
+            eq_image = target.specific.equirectangular_image
+            if eq_image:
+                outstr += f'image="{eq_image.file.url}"'
+            else:
+                outstr += 'image="#default-sky"'
+            outstr += '>\n'
+            if data['animation']:
+                outstr += is_animation(data)
+            outstr += '</a-link>\n'
+            return outstr
         else:
-            outstr += 'image="#default-sky"'
-        outstr += '>\n</a-link>\n'
-        return outstr
-    else:
+            return ''
+    except:
         return ''
 
 def make_triangle(page_obj, x, data):
