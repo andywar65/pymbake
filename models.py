@@ -75,6 +75,38 @@ class PymbakeFinishingPage(Page):
         ], heading="Skirting"),
     ]
 
+    def extract_dxf(self):
+
+        path_to_dxf = os.path.join(settings.STATIC_ROOT, 'pymbake/samples/finishings.dxf')
+        dxf_f = open(path_to_dxf, encoding = 'utf-8')
+        material_gallery= ''
+        collection = aframe.parse_dxf(dxf_f, material_gallery)
+        dxf_f.close()
+
+        collection = aframe.reference_openings(collection)
+
+        for x, data in collection.items():
+            if data['2'] == 'a-wall' or data['2'] == 'a-openwall':
+                data['in'] = self.title
+                data['out'] = self.title
+                data['left'] = self.title
+                data['right'] = self.title
+                collection[x] = data
+            elif data['2'] == 'a-door':
+                data['finishing'] = self.title
+                collection[x] = data
+
+        path_to_csv = os.path.join(settings.MEDIA_ROOT, 'documents', self.slug + '.csv')
+        csv_f = open(path_to_csv, 'w', encoding = 'utf-8',)
+        csv_f.write('Elem,Layer,Block,Surf,Strip,Type,X,Y,Z,Rx,Ry,Rz,Width,Depth,Height,Weight, Alert \n')
+
+        partitions = ''
+        finishings = PymbakeFinishingPage.objects#how can I restrict to children?TO DO
+        output = aframe.make_html(self, collection, partitions, finishings, csv_f)
+        csv_f.close()
+
+        return output
+
 class PymbakePartitionPage(Page):
     introduction = models.CharField(max_length=250, null=True, blank=True, help_text="Partition description",)
     image = models.ForeignKey(
