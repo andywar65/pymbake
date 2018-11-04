@@ -43,9 +43,9 @@ When you have several `Pymbake Pages` you can collect them under a `Pymbake Inde
 
 Standard blocks may be found in `static/pymbake/samples/standard-blocks.dxf` bundled within the app: box, cylinder, cone, sphere, circle, plane, look-at, text, links, curvedimage and lights. These mimic entities of the A-Frame library, with unit dimensions. Insert the block and scale it to the desired width, length and height. You can rotate it along all axis (previous limitations solved thanks to [Marilena Vendittelli](http://www.dis.uniroma1.it/~venditt/)). You can explode some of the standard blocks without affecting geometry: they will degrade to a series of 3D faces.
 
-Standard blocks come with attributes that affect their geometry. In CAD, attributes are prompted when inserting a block, and can be modified in the Property window. To understand how attributes affect geometry, refer to [A-Frame Documentation](https://aframe.io/docs/0.7.0/primitives/a-box.html) .
+Standard blocks come with attributes that affect their geometry. In CAD, attributes are prompted when inserting a block, and can be modified in the Property window. To understand how attributes affect geometry, refer to [A-Frame Documentation](https://aframe.io/docs/0.8.0/primitives/a-box.html) .
 
-Light standard block has a `type` attribute which can be set to ambient, directional, point and spot. Refer to [A-Frame Light Component Documentation](https://aframe.io/docs/0.7.0/components/light.html) for further details.
+Light standard block has a `type` attribute which can be set to ambient, directional, point and spot. Refer to [A-Frame Light Component Documentation](https://aframe.io/docs/0.8.0/components/light.html) for further details.
 
 Look-at standard block is a plane that always faces the camera.
 
@@ -54,6 +54,8 @@ Text standard block is a text centered in a bounding plane. The attributes contr
 Link standard block allows you to link different pages on a click. The `Tree` attribute lets you select among parent, previous, next and first child page. If target has an equirectangular image (see backend paragraph) it will appear in the link.
 
 Curvedimage standard block is an open cylinder where you can project panoramic images.
+
+Animation standard block animates the blocks that have same insertion point in CAD file. Refer to [A-Frame Animation Component Documentation](https://aframe.io/docs/0.8.0/core/animations.html) for further details on animation attributes.
 
 ### BIM standard blocks
 
@@ -70,4 +72,4 @@ BIM element data is stored in a `CSV` file downloadable from the frontend. Data 
 
 ### Next improvements
 
-Upgrade Index Page and Partition / Finishing Pages.
+Add animation to lights. Make furniture. Add finishing to doors. Upgrade Partition / Finishing Pages.
