@@ -192,7 +192,7 @@ def parse_dxf(dxf_f, material_gallery):
                 x += 1
 
             elif value == 'INSERT':#start block
-                data = {'41': 1, '42': 1, '43': 1, '50': 0, '210': 0, '220': 0, '230': 1,'repeat': False, 'type': '',}#default values
+                data = {'41': 1, '42': 1, '43': 1, '50': 0, '210': 0, '220': 0, '230': 1,'repeat': False, 'type': '','animation': False}#default values
                 flag = 'block'
                 x += 1
 
@@ -284,6 +284,25 @@ def reference_openings(collection):
                         data2 = door_tilted_case(x, data, data2)
                     collection[x2] = data2
 
+    return collection
+
+def reference_animations(collection):#TODO
+    collection2 = collection.copy()
+    for x, data in collection.items():
+        if data['2'] == 'a-animation':
+            collection[x] = data
+            for x2, data2 in collection2.items():
+                if data2['2'] != '3dface' or data2['2'] != 'a-wall' or data2['2'] != 'a-openwall' or data2['2'] != 'a-door':
+                    if data['10']==data2['10'] and data['20']==data2['20'] and data['30']==data2['30']:
+                        data2['animation'] = True
+                        data2['ATTRIBUTE'] = data['ATTRIBUTE']
+                        data2['FROM'] = data['FROM']
+                        data2['TO'] = data['TO']
+                        data2['BEGIN'] = data['BEGIN']
+                        data2['DIRECTION'] = data['DIRECTION']
+                        data2['REPEAT'] = data['REPEAT']
+                        data2['DURATION'] = data['DURATION']
+                        collection[x2] = data2
     return collection
 
 def door_straight_case(x, data, data2):
@@ -384,7 +403,21 @@ def make_box(x, data):
         outstr += '" \n'
     outstr += f'material="src: #image-{data["8"]}; color: {data["color"]}'
     outstr += is_repeat(data["repeat"], data["41"], data["43"])
-    outstr += '">\n</a-box>\n</a-entity>\n'
+    outstr += '">\n'
+    if data['animation']:
+        outstr += is_animation(data)
+    outstr += '</a-box>\n</a-entity>\n'
+    return outstr
+
+def is_animation(data):
+    outstr = f'<a-animation attribute="{data["ATTRIBUTE"]}"\n'
+    outstr += f'from="{data["FROM"]}"\n'
+    outstr += f'to="{data["TO"]}"\n'
+    outstr += f'begin="{data["BEGIN"]}"\n'
+    outstr += f'direction="{data["DIRECTION"]}"\n'
+    outstr += f'repeat="{data["REPEAT"]}"\n'
+    outstr += f'duration="{data["DURATION"]}"\n'
+    outstr += '></a-animation>\n'
     return outstr
 
 def make_cone(x, data):

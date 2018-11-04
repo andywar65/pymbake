@@ -204,6 +204,7 @@ class PymbakePage(Page):
         dxf_f.close()
 
         collection = aframe.reference_openings(collection)
+        collection = aframe.reference_animations(collection)
 
         path_to_csv = os.path.join(settings.MEDIA_ROOT, 'documents', self.slug + '.csv')
         csv_f = open(path_to_csv, 'w', encoding = 'utf-8',)
