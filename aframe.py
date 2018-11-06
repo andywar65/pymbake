@@ -999,16 +999,28 @@ class APartition(object):
     def part_simple_finishing(self):
         try:
             finishing = self.finishings.get(title = self.d[self.d['side']])
-            if finishing.image:
-                part_image = 'finishing-' + finishing.title
-                part_repeat = finishing.pattern
+            if self.d['side']=="floor":
+                if finishing.skirting_image:
+                    part_image = 'image-skirting-' + finishing.title
+                    part_repeat = finishing.skirting_pattern
+                else:
+                    part_image = self.d['8']
+                    part_repeat = self.d['repeat']
+                if finishing.skirting_color:
+                    part_color = finishing.skirting_color
+                else:
+                    part_color = self.d['color']
             else:
-                part_image = self.d['8']
-                part_repeat = self.d['repeat']
-            if finishing.color:
-                part_color = finishing.color
-            else:
-                part_color = self.d['color']
+                if finishing.image:
+                    part_image = 'finishing-' + finishing.title
+                    part_repeat = finishing.pattern
+                else:
+                    part_image = self.d['8']
+                    part_repeat = self.d['repeat']
+                if finishing.color:
+                    part_color = finishing.color
+                else:
+                    part_color = self.d['color']
 
             self.csv_f.write(f'{self.d["num"]},{self.d["layer"]},{self.d["2"]},{self.d["sub_side"]},-,{part_image},-,-,-,-,-,-,-,{self.d["width"]},{self.d["height"]},-,-,- \n')
         except:

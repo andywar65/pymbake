@@ -64,12 +64,12 @@ BIM standard blocks are recognized as real life building elements. By now we hav
 Wall and Slab types are defined in the backend as `Pymbake Pertition Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new partition type requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color`. You can then add as many wall `Layers` to the Partition Type as you want. Layers require a `Material`, a `Thickness` (in centimeters) and a `Weight` in kilograms per cubic meter.
 First layer is innermost for Walls and uppermost for Slabs. The app controls if wall/slab dimensions in CAD are consistent with Partition Type features, i.e. wall/slab thickness. If inconsistency arises, wall/slab is rendered in flat red. You can leave a layer with zero thickness to assign the same Partition Type to blocks with different depth.
 
-Finishings are defined in the backend as `Pymbake Finishing Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new finishing requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color` for `General`, `Tiling` and `Skirting` appearance. Tiling and Skirting require also `height`, intended as their upper bound with respect to the floor. Slabs don't use settings for tiling and skirting.
+Finishings are defined in the backend as `Pymbake Finishing Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new finishing requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color` for `General`, `Tiling` and `Skirting` appearance. Tiling and Skirting require also `height`, intended as their upper bound with respect to the floor. Slabs use skirting image and color for floor appearance. If you view a Finishing Page, a collection of BIM entities will be displayed, featuring finishing patterns.
 
-Doors can be hinged or sliding, single or double. Geometry and behaviour are defined in CAD (block dimension and attributes), appearance is defined by partition type. If you set type attribute to `ghost`, door panel is not rendered. If a door panel is clicked, an animation is triggered.
+Doors can be hinged or sliding, single or double. Geometry and behaviour are defined in CAD (block dimension and attributes), appearance is defined by partition type. If you set `type` attribute to `ghost`, door panel is not rendered. If a door panel is clicked, an animation is triggered.
 
 BIM element data is stored in a `CSV` file downloadable from the frontend. Data includes wall/slab weight and finishing surfaces.
 
 ### Next improvements
 
-Differentiate floor and ceiling finishing for a-slab. Add finishing to doors. Upgrade Partition Pages. Make furniture.
+Add finishing to doors. Upgrade Partition Pages. Make furniture.
