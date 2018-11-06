@@ -101,7 +101,7 @@ class PymbakeFinishingPage(Page):
         csv_f.write('Elem,Layer,Block,Surf,Strip,Type,X,Y,Z,Rx,Ry,Rz,Width,Depth,Height,Weight, Alert \n')
 
         partitions = ''
-        finishings = PymbakeFinishingPage.objects#how can I restrict to children?TO DO
+        finishings = PymbakeFinishingPage.objects#how can I restrict to self?TO DO
         output = aframe.make_html(self, collection, partitions, finishings, csv_f)
         csv_f.close()
 
