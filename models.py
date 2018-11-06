@@ -95,6 +95,10 @@ class PymbakeFinishingPage(Page):
             elif data['2'] == 'a-door':
                 data['finishing'] = self.title
                 collection[x] = data
+            elif data['2'] == 'a-slab':
+                data['floor'] = self.title
+                data['ceiling'] = self.title
+                collection[x] = data
 
         path_to_csv = os.path.join(settings.MEDIA_ROOT, 'documents', self.slug + '.csv')
         csv_f = open(path_to_csv, 'w', encoding = 'utf-8',)

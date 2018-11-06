@@ -72,4 +72,4 @@ BIM element data is stored in a `CSV` file downloadable from the frontend. Data 
 
 ### Next improvements
 
-Make furniture. Add finishing to doors. Upgrade Partition / Finishing Pages.
+Differentiate floor and ceiling finishing for a-slab. Add finishing to doors. Upgrade Partition Pages. Make furniture.
