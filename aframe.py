@@ -1158,18 +1158,18 @@ class APartition(object):
 class AOpening(object):#face it, this could be a APartition subclass
     def __init__(self, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
-        self.d['alert'] = 'None'
-        self.d['frame_image'] = ''
+        self.d['alert'] = 'None'#sets alert default
+        self.d['frame_image'] = ''#sets frame defaults
         self.d['frame_pattern'] = ''
         self.d['frame_color'] = self.d['color']
         self.type_obj = False
-        if self.d['type']:
+        if self.d['type']:#looks for partition type
             try:
                 self.type_obj = types.get(title = self.d['type'])
             except:
                 pass
         self.finish_obj = False
-        if self.d['finishing']:
+        if self.d['finishing']:#looks for finishing
             try:
                 self.finish_obj = finishings.get(title = self.d['finishing'])
             except:
@@ -1217,13 +1217,15 @@ class AOpening(object):#face it, this could be a APartition subclass
         #left frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-left-frame" \n'
         outstr += f'position="{-0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
-        outstr += f'scale="0.1 {fabs(self.d["43"])+0.099} {fabs(self.d["42"])+0.02}" \n'
+        outstr += 'rotation="0 0 90" \n'
+        outstr += f'scale="{fabs(self.d["43"])+0.099} 0.1 {fabs(self.d["42"])+0.02}" \n'
         outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #right frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-right-frame" \n'
         outstr += f'position="{self.d["41"]+0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
-        outstr += f'scale="0.1 {fabs(self.d["43"])+0.099} {fabs(self.d["42"])+0.02}" \n'
+        outstr += 'rotation="0 0 90" \n'
+        outstr += f'scale="{fabs(self.d["43"])+0.099} 0.1 {fabs(self.d["42"])+0.02}" \n'
         outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #top frame
