@@ -1,5 +1,6 @@
 import os
 from pymbake import aframe
+from math import fabs
 
 from django import forms
 from django.db import models
@@ -137,6 +138,31 @@ class PymbakePartitionPage(Page):
         ], heading="Appearance"),
         InlinePanel('part_layers', label="Partition layers",),
     ]
+
+    def write_html(self):
+        output = ''
+        i = 1
+        layers = self.part_layers.all()
+        if layers:
+            for layer in layers:
+
+                thickness = fabs(float(layer.thickness)/100)
+                if thickness == 0:
+                    thickness = 0.1
+                    name = layer.material + '(variable)'
+                else:
+                    name = layer.material
+                if i == 1:
+                    dist = 0
+                    material = f'src: #image-{self.title}; color: {self.color}'
+                else:
+                    dist += dist2 + thickness/2
+                    material = f'color: {aframe.cad2hex(i)}'
+                i += 1
+                output += f'<a-box position="0 1.5 {-dist}" material="{material}" \n'
+                output += f'depth="{thickness}" height="3" width="1"></a-box> \n'
+                dist2 = thickness/2
+        return output
 
 class PymbakePartitionPageLayers(Orderable):
     page = ParentalKey(PymbakePartitionPage, related_name='part_layers')

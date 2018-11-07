@@ -72,4 +72,4 @@ BIM entity data is stored in a `CSV` file downloadable from the frontend. Data i
 
 ### Next improvements
 
-Upgrade Partition Pages. Make furniture.
+Material names in Partition Pages. Make furniture.
