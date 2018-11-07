@@ -66,10 +66,10 @@ First layer is innermost for Walls and uppermost for Slabs. The app controls if 
 
 Finishings are defined in the backend as `Pymbake Finishing Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new finishing requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color` for `General`, `Tiling` and `Skirting` appearance. Tiling and Skirting require also `height`, intended as their upper bound with respect to the floor. Slabs use skirting image and color for floor appearance. If you view a Finishing Page, a collection of BIM entities will be displayed, featuring finishing patterns.
 
-Doors can be hinged or sliding, single or double. Geometry and behaviour are defined in CAD (block dimension and attributes), appearance is defined by partition type. If you set `type` attribute to `ghost`, door panel is not rendered. If a door panel is clicked, an animation is triggered.
+Doors can be hinged or sliding, single or double. Geometry and behaviour are defined in CAD (block dimension and attributes), appearance is defined by finishing (tiling for the panel and skirting for the frame). If you set `type` attribute to `ghost`, door panel is not rendered. If a door panel is clicked, an animation is triggered.
 
 BIM element data is stored in a `CSV` file downloadable from the frontend. Data includes wall/slab weight and finishing surfaces.
 
 ### Next improvements
 
-Add finishing to doors. Upgrade Partition Pages. Make furniture.
+Fix frame finishing. Upgrade Partition Pages. Make furniture.

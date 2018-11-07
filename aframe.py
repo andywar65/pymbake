@@ -250,9 +250,11 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
         elif data['2'] == 'a-door':
             door = AOpening(data, partitions, finishings, csv_f)
             if door.type_obj:
-                door.has_type()
+                door.has_type()#changes colors and writes to csv
             else:
-                door.no_type()
+                door.no_type()#writes to csv
+            if door.finish_obj:
+                door.has_finishing()#changes colors again
             if door.d['alert'] == 'None':
                 output[x] = door.write_html()
             else:#by now useless, if is always true
@@ -264,6 +266,7 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
                 part.calc_weight()
             else:
                 part.no_weight()
+            #here we could add the has_finishing, as in AOpening
             if part.d['alert'] == 'None':
                 output[x] = part.write_html()
             else:
@@ -1001,7 +1004,7 @@ class APartition(object):
             finishing = self.finishings.get(title = self.d[self.d['side']])
             if self.d['side']=="floor":
                 if finishing.skirting_image:
-                    part_image = 'image-skirting-' + finishing.title
+                    part_image = 'skirting-' + finishing.title
                     part_repeat = finishing.skirting_pattern
                 else:
                     part_image = self.d['8']
@@ -1156,14 +1159,36 @@ class AOpening(object):#face it, this could be a APartition subclass
     def __init__(self, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
         self.d['alert'] = 'None'
+        self.d['frame_image'] = ''
+        self.d['frame_pattern'] = ''
+        self.d['frame_color'] = self.d['color']
         self.type_obj = False
         if self.d['type']:
             try:
                 self.type_obj = types.get(title = self.d['type'])
             except:
                 pass
-        self.finishings = finishings
+        self.finish_obj = False
+        if self.d['finishing']:
+            try:
+                self.finish_obj = finishings.get(title = self.d['finishing'])
+            except:
+                pass
         self.csv_f = csv_f
+
+    def has_finishing(self):
+        #we change appearance according to finishing
+        if self.finish_obj.tiling_image:
+            self.d['8'] = 'tiling-' + self.finish_obj.title
+            self.d['repeat'] = self.finish_obj.tiling_pattern
+        if self.finish_obj.tiling_color:
+            self.d['color'] = self.finish_obj.tiling_color
+        if self.finish_obj.skirting_image:
+            self.d['frame_image'] = 'skirting-' + self.finish_obj.title
+            self.d['frame_repeat'] = self.finish_obj.skirting_pattern
+        if self.finish_obj.skirting_color:
+            self.d['frame_color'] = self.finish_obj.skirting_color
+        return
 
     def has_type(self):
         #we don't calculate door weight, but we change appearance accordingly to partition type
@@ -1193,19 +1218,19 @@ class AOpening(object):#face it, this could be a APartition subclass
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-left-frame" \n'
         outstr += f'position="{-0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
         outstr += f'scale="0.1 {fabs(self.d["43"])+0.099} {fabs(self.d["42"])+0.02}" \n'
-        outstr += f'material="color: {self.d["color"]}">'
+        outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #right frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-right-frame" \n'
         outstr += f'position="{self.d["41"]+0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
         outstr += f'scale="0.1 {fabs(self.d["43"])+0.099} {fabs(self.d["42"])+0.02}" \n'
-        outstr += f'material="color: {self.d["color"]}">'
+        outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #top frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-top-frame" \n'
         outstr += f'position="{self.d["41"]/2} {self.d["43"]+0.049*self.unit(self.d["43"])} {-self.d["42"]/2}" \n'
         outstr += f'scale="{fabs(self.d["41"])-0.002} 0.1 {fabs(self.d["42"])+0.02}" \n'
-        outstr += f'material="color: {self.d["color"]}">'
+        outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
 
         if self.d["type"] == 'ghost':
