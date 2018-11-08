@@ -1381,13 +1381,33 @@ class AFurniture(object):
         outstr += f'material="src: #image-{self.d["tiling_image"]}; color: {self.d["tiling_color"]} '
         outstr += is_repeat(self.d["tiling_repeat"], fabs(self.d["41"]), fabs(self.d["42"]))
         outstr += '"></a-box>\n'
+        leg = self.d["43"]-0.025*unit(self.d["43"])
+        #first leg
+        outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-1" \n'
+        outstr += f'position="{0.05*unit(self.d["41"])} {leg/2} {-0.05*unit(self.d["42"])}" \n'
+        outstr += self.close_leg(leg)
+        #second leg
+        outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-2" \n'
+        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {leg/2} {-0.05*unit(self.d["42"])}" \n'
+        outstr += self.close_leg(leg)
+        #third leg
+        outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-3" \n'
+        outstr += f'position="{0.05*unit(self.d["41"])} {leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
+        outstr += self.close_leg(leg)
+        #fourth leg
+        outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-4" \n'
+        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
+        outstr += self.close_leg(leg)
         #close entity
         outstr += '</a-entity>\n'
         return outstr
 
-    def unit(self, nounit):
-        unit = fabs(nounit)/nounit
-        return unit
+    def close_leg(self, leg):
+        outstr = 'radius="0.025" \n'
+        outstr += f'height="{leg}" \n'
+        outstr += f'material="src: #image-{self.d["skirting_image"]}; color: {self.d["skirting_color"]} '
+        outstr += '"></a-cylinder>\n'
+        return outstr
 
 def cad2hex(cad_color):
     cad_color = abs(int(cad_color))
