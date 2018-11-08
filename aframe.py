@@ -260,6 +260,13 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
             else:#by now useless, if is always true
                 pass #output[x] = door.write_html_alert()
 
+        elif data['2'] == 'a-furniture':
+            furn = AFurniture(data, finishings)
+            if furn.finish_obj:
+                furn.has_finishing()#changes colors
+
+            output[x] = furn.write_html()
+
         elif data['2'] == 'a-wall' or data['2'] == 'a-slab' or data['2'] == 'a-openwall':
             part = APartition(data, partitions, finishings, csv_f)
             if part.type_obj:
@@ -379,12 +386,18 @@ def door_tilted_case(x, data, data2):
     #w50 = round(data2['50']*fabs(data2['43'])/data2['43'], 4)
     return data2
 
+#returns repeat image values
 def is_repeat(repeat, rx, ry):
     if repeat:
         output = f'; repeat:{fabs(rx)} {fabs(ry)}'
         return output
     else:
         return ';'
+
+#returns positive/negative scaling
+def unit(nounit):
+    unit = fabs(nounit)/nounit
+    return unit
 
 def make_box(x, data):
     outstr = f'<a-entity id="box-{x}-ent" \n'
@@ -1119,13 +1132,6 @@ class APartition(object):
             outstr += f'">\n</a-plane> \n'
         return outstr
 
-    def is_repeat(self, repeat, rx, rz):
-        if repeat:
-            output = f'; repeat:{rx} {ry}'
-            return output
-        else:
-            return ';'
-
     def write_html_alert(self):
         outstr = f'<a-entity id="{self.d["2"]}-{self.d["num"]}-alert: {self.d["alert"]}" \n'
         outstr += f'position="{self.d["10"]} {self.d["30"]} {self.d["20"]}" \n'
@@ -1216,21 +1222,21 @@ class AOpening(object):#face it, this could be a APartition subclass
         outstr += f'rotation="{self.d["210"]} {self.d["50"]} {self.d["220"]}">\n'
         #left frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-left-frame" \n'
-        outstr += f'position="{-0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
+        outstr += f'position="{-0.049*unit(self.d["41"])} {(self.d["43"]+0.099*unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
         outstr += 'rotation="0 0 90" \n'
         outstr += f'scale="{fabs(self.d["43"])+0.099} 0.1 {fabs(self.d["42"])+0.02}" \n'
         outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #right frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-right-frame" \n'
-        outstr += f'position="{self.d["41"]+0.049*self.unit(self.d["41"])} {(self.d["43"]+0.099*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
+        outstr += f'position="{self.d["41"]+0.049*unit(self.d["41"])} {(self.d["43"]+0.099*unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
         outstr += 'rotation="0 0 90" \n'
         outstr += f'scale="{fabs(self.d["43"])+0.099} 0.1 {fabs(self.d["42"])+0.02}" \n'
         outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
         #top frame
         outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-top-frame" \n'
-        outstr += f'position="{self.d["41"]/2} {self.d["43"]+0.049*self.unit(self.d["43"])} {-self.d["42"]/2}" \n'
+        outstr += f'position="{self.d["41"]/2} {self.d["43"]+0.049*unit(self.d["43"])} {-self.d["42"]/2}" \n'
         outstr += f'scale="{fabs(self.d["41"])-0.002} 0.1 {fabs(self.d["42"])+0.02}" \n'
         outstr += f'material="src: #image-{self.d["frame_image"]}; color: {self.d["frame_color"]}">'
         outstr += '</a-box>\n'
@@ -1246,10 +1252,10 @@ class AOpening(object):#face it, this could be a APartition subclass
                     outstr += f'<a-animation attribute="position" from="0 0 0" to="{-(self.d["41"])/2} 0 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part 1
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part-1" \n'
-                    outstr += f'position="{self.d["41"]/4} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
-                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{self.d["41"]/4} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
+                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #animated slide 2
@@ -1258,10 +1264,10 @@ class AOpening(object):#face it, this could be a APartition subclass
                     outstr += f'<a-animation attribute="position" from="{self.d["41"]} 0 0" to="{(self.d["41"])*3/2} 0 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part 2
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part-2" \n'
-                    outstr += f'position="{-self.d["41"]/4} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
-                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{-self.d["41"]/4} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
+                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #end entity
@@ -1273,10 +1279,10 @@ class AOpening(object):#face it, this could be a APartition subclass
                     outstr += f'<a-animation attribute="position" from="0 0 0" to="{-self.d["41"]} 0 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part" \n'
-                    outstr += f'position="{self.d["41"]/2} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
-                    outstr += f'scale="{fabs(self.d["41"])-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{self.d["41"]/2} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-self.d["42"]/2}" \n'
+                    outstr += f'scale="{fabs(self.d["41"])-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], fabs(self.d["41"])-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], fabs(self.d["41"])-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #end entity
@@ -1286,25 +1292,25 @@ class AOpening(object):#face it, this could be a APartition subclass
                 if eval(self.d["double"]):
                     #animated hinge 1
                     outstr += f'<a-entity id="{self.d["2"]}-{self.d["num"]}-hinge-1"> \n'
-                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {-90*self.unit(self.d["41"])*self.unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
+                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {-90*unit(self.d["41"])*unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part 1
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part-1" \n'
-                    outstr += f'position="{self.d["41"]/4} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-0.025*self.unit(self.d["42"])}" \n'
-                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{self.d["41"]/4} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-0.025*unit(self.d["42"])}" \n'
+                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #animated hinge 2
                     outstr += f'<a-entity id="{self.d["2"]}-{self.d["num"]}-hinge-2" '
                     outstr += f'position="{self.d["41"]} 0 0"> \n'
-                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {90*self.unit(self.d["41"])*self.unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
+                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {90*unit(self.d["41"])*unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part 2
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part-2" \n'
-                    outstr += f'position="{-self.d["41"]/4} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-0.025*self.unit(self.d["42"])}" \n'
-                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{-self.d["41"]/4} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-0.025*unit(self.d["42"])}" \n'
+                    outstr += f'scale="{(fabs(self.d["41"]))/2-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], (fabs(self.d["41"]))/2-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #end entity
@@ -1313,29 +1319,75 @@ class AOpening(object):#face it, this could be a APartition subclass
                 else:#single
                     #animated hinge
                     outstr += f'<a-entity id="{self.d["2"]}-{self.d["num"]}-hinge"> \n'
-                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {-90*self.unit(self.d["41"])*self.unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
+                    outstr += f'<a-animation attribute="rotation" from="0 0 0" to="0 {-90*unit(self.d["41"])*unit(self.d["42"])} 0" begin="click" repeat="1" direction="alternate"></a-animation>'
                     #moving part
                     outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-moving-part" \n'
-                    outstr += f'position="{self.d["41"]/2} {(self.d["43"]-0.001*self.unit(self.d["43"]))/2} {-0.025*self.unit(self.d["42"])}" \n'
-                    outstr += f'scale="{fabs(self.d["41"])-0.002} {self.d["43"]-0.001*self.unit(self.d["43"])} 0.05" \n'
+                    outstr += f'position="{self.d["41"]/2} {(self.d["43"]-0.001*unit(self.d["43"]))/2} {-0.025*unit(self.d["42"])}" \n'
+                    outstr += f'scale="{fabs(self.d["41"])-0.002} {self.d["43"]-0.001*unit(self.d["43"])} 0.05" \n'
                     outstr += f'material="src: #image-{self.d["8"]}; color: {self.d["color"]}'
-                    outstr += is_repeat(self.d["repeat"], fabs(self.d["41"])-0.002, self.d["43"]-0.001*self.unit(self.d["43"]))
+                    outstr += is_repeat(self.d["repeat"], fabs(self.d["41"])-0.002, self.d["43"]-0.001*unit(self.d["43"]))
                     outstr += '"></a-box>\n'
                     outstr += '</a-entity>\n'
                     #end entity
                     outstr += '</a-entity>\n'
                     return outstr
 
+class AFurniture(object):
+    def __init__(self, data, finishings):
+        self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
+        self.finish_obj = False
+        if self.d['finishing']:#looks for finishing
+            try:
+                self.finish_obj = finishings.get(title = self.d['finishing'])
+            except:
+                pass
+
+    def has_finishing(self):
+        #we change appearance according to finishing
+        if self.finish_obj.image:
+            self.d['8'] = self.finish_obj.title
+            self.d['repeat'] = self.finish_obj.pattern
+        if self.finish_obj.color:
+            self.d['color'] = self.finish_obj.color
+        if self.finish_obj.tiling_image:
+            self.d['tiling_image'] = 'tiling-' + self.finish_obj.title
+            self.d['tiling_repeat'] = self.finish_obj.tiling_pattern
+        if self.finish_obj.tiling_color:
+            self.d['tiling_color'] = self.finish_obj.tiling_color
+        if self.finish_obj.skirting_image:
+            self.d['skirting_image'] = 'skirting-' + self.finish_obj.title
+            self.d['skirting_repeat'] = self.finish_obj.skirting_pattern
+        if self.finish_obj.skirting_color:
+            self.d['skirting_color'] = self.finish_obj.skirting_color
+        return
+
+    def write_html(self):
+        if self.d['type'] == 't01':
+            output = self.make_table_01()
+        #elif of other furniture
+        else:#in the end it draws a table!
+            output = self.make_table_01()
+        return output
+
+    def make_table_01(self):
+        #start entity
+        outstr = f'<a-entity id="{self.d["2"]}-{self.d["num"]}" \n'
+        outstr += f'position="{self.d["10"]} {self.d["30"]} {self.d["20"]}" \n'
+        outstr += f'rotation="{self.d["210"]} {self.d["50"]} {self.d["220"]}">\n'
+        #table top
+        outstr += f'<a-box id="{self.d["2"]}-{self.d["num"]}-table-top" \n'
+        outstr += f'position="{self.d["41"]/2} {self.d["43"]-0.025*unit(self.d["43"])} {-self.d["42"]/2}" \n'
+        outstr += f'scale="{fabs(self.d["41"])} 0.05 {fabs(self.d["42"])}" \n'
+        outstr += f'material="src: #image-{self.d["tiling_image"]}; color: {self.d["tiling_color"]} '
+        outstr += is_repeat(self.d["tiling_repeat"], fabs(self.d["41"]), fabs(self.d["42"]))
+        outstr += '"></a-box>\n'
+        #close entity
+        outstr += '</a-entity>\n'
+        return outstr
+
     def unit(self, nounit):
         unit = fabs(nounit)/nounit
         return unit
-
-    def is_repeat(self, repeat, rx, rz):#this repetition (!) makes me think that this should be a subclass of APartition
-        if repeat:
-            output = f'; repeat:{rx} {ry}'
-            return output
-        else:
-            return ';'
 
 def cad2hex(cad_color):
     cad_color = abs(int(cad_color))

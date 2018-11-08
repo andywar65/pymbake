@@ -96,6 +96,9 @@ class PymbakeFinishingPage(Page):
             elif data['2'] == 'a-door':
                 data['finishing'] = self.title
                 collection[x] = data
+            elif data['2'] == 'a-furniture':
+                data['finishing'] = self.title
+                collection[x] = data
             elif data['2'] == 'a-slab':
                 data['floor'] = self.title
                 data['ceiling'] = self.title
@@ -149,9 +152,9 @@ class PymbakePartitionPage(Page):
                 thickness = fabs(float(layer.thickness)/100)
                 if thickness == 0:
                     thickness = 0.1
-                    name = layer.material + ' (variable)'
+                    name = str(i) + '- ' + layer.material + ' (variable)'
                 else:
-                    name = layer.material + ' (' + str(thickness*100) + ' cm)'
+                    name = str(i) + '- ' + layer.material + ' (' + str(thickness*100) + ' cm)'
                 if i == 1:
                     dist = 0
                     material = f'src: #image-{self.title}; color: {self.color}'
