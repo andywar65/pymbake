@@ -149,9 +149,9 @@ class PymbakePartitionPage(Page):
                 thickness = fabs(float(layer.thickness)/100)
                 if thickness == 0:
                     thickness = 0.1
-                    name = layer.material + '(variable)'
+                    name = layer.material + ' (variable)'
                 else:
-                    name = layer.material
+                    name = layer.material + ' (' + str(thickness*100) + ' cm)'
                 if i == 1:
                     dist = 0
                     material = f'src: #image-{self.title}; color: {self.color}'
@@ -160,7 +160,9 @@ class PymbakePartitionPage(Page):
                     material = f'color: {aframe.cad2hex(i)}'
                 i += 1
                 output += f'<a-box position="0 1.5 {-dist}" material="{material}" \n'
-                output += f'depth="{thickness}" height="3" width="1"></a-box> \n'
+                output += f'depth="{thickness}" height="3" width="1"> \n'
+                output += f'<a-entity text="anchor: left; width: 1.5; color: black; value:{name}" \n'
+                output += 'position="0.55 -1.5 0 "rotation="-90 0 0"></a-entity></a-box> \n'
                 dist2 = thickness/2
         return output
 
