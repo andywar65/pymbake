@@ -55,9 +55,8 @@
 			  {% endfor %}
 
 		</a-assets>
-		{% with shadows=page.shadows %}
-			<a-entity id="dxf-ent" shadow="receive: {{ shadows|lower }}; cast: {{ shadows|lower }}"
-		{% endwith %}
+
+			<a-entity id="dxf-ent" 
             position="0 0 0"
             rotation="0 0 0">
 			{% with elements=page.extract_dxf %}

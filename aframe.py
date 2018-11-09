@@ -207,36 +207,36 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
             output[x] = make_triangle(page_obj, x, data)
 
         if data['2'] == '6planes':#left for legacy
-            output[x] = make_box(x, data)
+            output[x] = make_box(page_obj, x, data)
 
         elif data['2'] == 'box' or data['2'] == 'a-box':
-            output[x] = make_box(x, data)
+            output[x] = make_box(page_obj, x, data)
 
         elif data['2'] == 'cylinder' or data['2'] == 'a-cylinder':
-            output[x] = make_cylinder(x, data)
+            output[x] = make_cylinder(page_obj, x, data)
 
         elif data['2'] == 'a-curvedimage':
             output[x] = make_curvedimage(x, data)
 
         elif data['2'] == 'cone' or data['2'] == 'a-cone':
-            output[x] = make_cone(x, data)
+            output[x] = make_cone(page_obj, x, data)
 
         elif data['2'] == 'sphere' or data['2'] == 'a-sphere':
-            output[x] = make_sphere(x, data)
+            output[x] = make_sphere(page_obj, x, data)
 
         elif data['2'] == 'circle' or data['2'] == 'a-circle':
-            output[x] = make_circle(x, data)
+            output[x] = make_circle(page_obj, x, data)
 
         elif data['2'] == 'plane' or data['2'] == 'a-plane' or data['2'] == 'look-at':
-            output[x] = make_plane(x, data)
+            output[x] = make_plane(page_obj, x, data)
 
         elif data['2'] == 'floor':#left for legacy
             data['210'] = data['210'] - 90
-            output[x] = make_plane(x, data)
+            output[x] = make_plane(page_obj, x, data)
 
         elif data['2'] == 'ceiling':#left for legacy
             data['210'] = data['210'] + 90
-            output[x] = make_plane(x, data)
+            output[x] = make_plane(page_obj, x, data)
 
         elif data['2'] == 'light' or data['2'] == 'a-light':
             output[x] = make_light(page_obj, x, data)
@@ -248,7 +248,7 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
             output[x] = make_link(page_obj, x, data)
 
         elif data['2'] == 'a-door':
-            door = AOpening(data, partitions, finishings, csv_f)
+            door = AOpening(page_obj, data, partitions, finishings, csv_f)
             if door.type_obj:
                 door.has_type()#changes colors and writes to csv
             else:
@@ -261,14 +261,14 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
                 pass #output[x] = door.write_html_alert()
 
         elif data['2'] == 'a-furniture':
-            furn = AFurniture(data, finishings)
+            furn = AFurniture(page_obj, data, finishings)
             if furn.finish_obj:
                 furn.has_finishing()#changes colors
 
             output[x] = furn.write_html()
 
         elif data['2'] == 'a-wall' or data['2'] == 'a-slab' or data['2'] == 'a-openwall':
-            part = APartition(data, partitions, finishings, csv_f)
+            part = APartition(page_obj, data, partitions, finishings, csv_f)
             if part.type_obj:
                 part.calc_weight()
             else:
@@ -399,8 +399,10 @@ def unit(nounit):
     unit = fabs(nounit)/nounit
     return unit
 
-def make_box(x, data):
+def make_box(page_obj, x, data):
     outstr = f'<a-entity id="box-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-box id="box-{x}" \n'
@@ -436,8 +438,10 @@ def is_animation(data):
     outstr += '></a-animation>\n'
     return outstr
 
-def make_cone(x, data):
+def make_cone(page_obj, x, data):
     outstr = f'<a-entity id="cone-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-cone id="cone-{x}" \n'
@@ -470,8 +474,10 @@ def make_cone(x, data):
     outstr += '</a-cone>\n</a-entity>\n'
     return outstr
 
-def make_circle(x, data):
+def make_circle(page_obj, x, data):
     outstr = f'<a-entity id="circle-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-circle id="circle-{x}" \n'
@@ -497,8 +503,10 @@ def make_circle(x, data):
     outstr += '</a-circle>\n</a-entity>\n'
     return outstr
 
-def make_cylinder(x, data):
+def make_cylinder(page_obj, x, data):
     outstr = f'<a-entity id="cylinder-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-cylinder id="cylinder-{x}" \n'
@@ -554,8 +562,10 @@ def make_curvedimage(x, data):
     outstr += '</a-curvedimage>\n</a-entity>\n'
     return outstr
 
-def make_sphere(x, data):
+def make_sphere(page_obj, x, data):
     outstr = f'<a-entity id="sphere-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-sphere id="sphere-{x}" \n'
@@ -588,8 +598,10 @@ def make_sphere(x, data):
     outstr += '</a-sphere>\n</a-entity>\n'
     return outstr
 
-def make_plane(x, data):
+def make_plane(page_obj, x, data):
     outstr = f'<a-entity id="plane-{x}-ent" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-plane id="plane-{x}" \n'
@@ -664,6 +676,8 @@ def make_link(page_obj, x, data):
 
 def make_triangle(page_obj, x, data):
     outstr = f'<a-triangle id="triangle-{x}" \n'
+    if page_obj.shadows:
+        outstr += 'shadow="receive: true; cast: true" \n'
     outstr += f'geometry="vertexA:{data["10"]} {data["30"]} {data["20"]}; \n'
     outstr += f'vertexB:{data["11"]} {data["31"]} {data["21"]}; \n'
     outstr += f'vertexC:{data["12"]} {data["32"]} {data["22"]}" \n'
@@ -713,8 +727,9 @@ def make_light(page_obj, x, data):
     return outstr
 
 class APartition(object):
-    def __init__(self, data, types, finishings, csv_f):
+    def __init__(self, page_obj, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
+        self.page_obj = page_obj
         self.d['alert'] = 'None'
         self.type_obj = False
         if self.d['type']:
@@ -770,6 +785,8 @@ class APartition(object):
     def write_html(self):
         #start entity
         outstr = f'<a-entity id="{self.d["2"]}-{self.d["num"]}" \n'
+        if self.page_obj.shadows:
+            outstr += 'shadow="receive: true; cast: true" \n'
         outstr += f'position="{self.d["10"]} {self.d["30"]} {self.d["20"]}" \n'
         outstr += f'rotation="{self.d["210"]} {self.d["50"]} {self.d["220"]}">\n'
         #slab handle is on top
@@ -1163,8 +1180,9 @@ class APartition(object):
         return outstr
 
 class AOpening(object):#face it, this could be a APartition subclass
-    def __init__(self, data, types, finishings, csv_f):
+    def __init__(self, page_obj, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
+        self.page_obj = page_obj
         self.d['alert'] = 'None'#sets alert default
         self.d['frame_image'] = ''#sets frame defaults
         self.d['frame_pattern'] = ''
@@ -1219,6 +1237,8 @@ class AOpening(object):#face it, this could be a APartition subclass
     def write_html(self):
         #start entity
         outstr = f'<a-entity id="{self.d["2"]}-{self.d["num"]}" \n'
+        if self.page_obj.shadows:
+            outstr += 'shadow="receive: true; cast: true" \n'
         outstr += f'position="{self.d["10"]} {self.d["30"]} {self.d["20"]}" \n'
         outstr += f'rotation="{self.d["210"]} {self.d["50"]} {self.d["220"]}">\n'
         #left frame
@@ -1334,8 +1354,9 @@ class AOpening(object):#face it, this could be a APartition subclass
                     return outstr
 
 class AFurniture(object):
-    def __init__(self, data, finishings):
+    def __init__(self, page_obj, data, finishings):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
+        self.page_obj = page_obj
         self.finish_obj = False
         if self.d['finishing']:#looks for finishing
             try:
@@ -1373,6 +1394,8 @@ class AFurniture(object):
     def make_table_01(self):
         #start entity
         outstr = f'<a-entity id="{self.d["2"]}-{self.d["num"]}" \n'
+        if self.page_obj.shadows:
+            outstr += 'shadow="receive: true; cast: true" \n'
         outstr += f'position="{self.d["10"]} {self.d["30"]} {self.d["20"]}" \n'
         outstr += f'rotation="{self.d["210"]} {self.d["50"]} {self.d["220"]}">\n'
         #table top
