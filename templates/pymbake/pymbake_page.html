@@ -56,7 +56,7 @@
 
 		</a-assets>
 
-			<a-entity id="dxf-ent" 
+			<a-entity id="dxf-ent"
             position="0 0 0"
             rotation="0 0 0">
 			{% with elements=page.extract_dxf %}
@@ -72,7 +72,7 @@
 				{% with fly_camera=page.fly_camera %}
                   <a-camera id="camera" wasd-controls="fly: {{ fly_camera|lower }}">
 				{% endwith %}
-                    <a-light type="point"></a-light>
+                    <a-light type="point" distance="10"></a-light>
                     <a-entity position="0 -1.6 0" id="camera-foot"></a-entity>
                     <a-cursor color="#2E3A87"></a-cursor>
                   </a-camera>
