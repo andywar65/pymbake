@@ -533,6 +533,7 @@ def make_cylinder(x, data):
 
 def make_curvedimage(x, data):
     outstr = f'<a-entity id="curvedimage-{x}-ent" \n'
+    outstr += 'shadow="receive: false; cast: false" \n'
     outstr += f'position="{data["10"]} {data["30"]} {data["20"]}" \n'
     outstr += f'rotation="{data["210"]} {data["50"]} {data["220"]}">\n'
     outstr += f'<a-curvedimage id="curvedimage-{x}" \n'
