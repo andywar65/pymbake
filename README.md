@@ -45,7 +45,7 @@ Standard blocks may be found in `static/pymbake/samples/standard-blocks.dxf` bun
 
 Standard blocks come with attributes that affect their geometry. In CAD, attributes are prompted when inserting a block, and can be modified in the Property window. To understand how attributes affect geometry, refer to [A-Frame Documentation](https://aframe.io/docs/0.8.0/primitives/a-box.html) .
 
-Light standard block has a `type` attribute which can be set to ambient, directional, point and spot. Refer to [A-Frame Light Component Documentation](https://aframe.io/docs/0.8.0/components/light.html) for further details.
+Light standard block has a `type` attribute which can be set to ambient, directional, point and spot. Directional light is best suited for shadowing. Scale light block to modify shadow camera frustum. Refer to [A-Frame Light Component Documentation](https://aframe.io/docs/0.8.0/components/light.html) for further details.
 
 Look-at standard block is a plane that always faces the camera.
 
@@ -59,17 +59,19 @@ Animation standard block animates the blocks that have same insertion point in C
 
 ### BIM standard blocks
 
-BIM standard blocks are recognized as real life building elements. By now we have only `Wall`, `Slab` and `Door` BIM entities. If you put a Door inside a Wall, you get a `Openwall`. Partition blocks behave pretty much as a box, but attributes are different: we can set a `Type` for each wall/slab and a `Finishing` for each side.
+BIM standard blocks are recognized as real life building elements. By now we have `Wall`, `Slab`, `Door` and `Furniture` BIM entities. If you put a Door inside a Wall, you get a `Openwall`. Partition blocks behave pretty much as a box, but attributes are different: we can set a `Type` for each wall/slab and a `Finishing` for each side.
 
 Wall and Slab types are defined in the backend as `Pymbake Pertition Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new partition type requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color`. You can then add as many wall `Layers` to the Partition Type as you want. Layers require a `Material`, a `Thickness` (in centimeters) and a `Weight` in kilograms per cubic meter.
-First layer is innermost for Walls and uppermost for Slabs. The app controls if wall/slab dimensions in CAD are consistent with Partition Type features, i.e. wall/slab thickness. If inconsistency arises, wall/slab is rendered in flat red. You can leave a layer with zero thickness to assign the same Partition Type to entities with different depth.
+First layer is innermost for Walls and uppermost for Slabs. The app controls if wall/slab dimensions in CAD are consistent with Partition Type features, i.e. wall/slab thickness. If inconsistency arises, wall/slab is rendered in flat red. You can leave a layer with zero thickness to assign the same Partition Type to entities with different depth. If you view a Partition Page, a schematic partition will be displayed, featuring layer names and thickness.
 
 Finishings are defined in the backend as `Pymbake Finishing Pages`, and must be children of the `Pymbake Page` they are related to. Creating a new finishing requires `Title`, `Intro`, `Image` (is it a `pattern`?) and `Color` for `General`, `Tiling` and `Skirting` appearance. Tiling and Skirting require also `height`, intended as their upper bound with respect to the floor. Slabs use skirting image and color for floor appearance. If you view a Finishing Page, a collection of BIM entities will be displayed, featuring finishing patterns.
 
 Doors can be hinged or sliding, single or double. Geometry and behaviour are defined in CAD (block dimension and attributes), appearance is defined by finishing (tiling for the panel and skirting for the frame). If you set `type` attribute to `ghost`, door panel is not rendered. If a door panel is clicked, an animation is triggered.
 
+Furniture blocks have `type` and `finishing` attributes. There will be a list of furniture types (by now only t01 = simple table). The finishing attribute relates to a Finishing Page with equal title as the attribute. Geometry is defined in CAD.
+
 BIM entity data is stored in a `CSV` file downloadable from the frontend. Data includes wall/slab weight and finishing surfaces.
 
 ### Next improvements
 
-Make furniture.
+Make other furniture.
