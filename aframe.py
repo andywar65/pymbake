@@ -264,8 +264,6 @@ def make_html(page_obj, collection, partitions, finishings, csv_f):
             furn = AFurniture(page_obj, data, finishings)
             if furn.finish_obj:
                 furn.has_finishing()#changes colors
-            else:
-                furn.no_finishing()#give dummy values to tiling and skirting
             output[x] = furn.write_html()
 
         elif data['2'] == 'a-wall' or data['2'] == 'a-slab' or data['2'] == 'a-openwall':
@@ -1358,8 +1356,16 @@ class AFurniture(object):
     def __init__(self, page_obj, data, finishings):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
         self.page_obj = page_obj
+        #dummy values
+        self.d['tiling_image'] = self.d['8']
+        self.d['tiling_repeat'] = self.d['repeat']
+        self.d['tiling_color'] = self.d['color']
+        self.d['skirting_image'] = self.d['8']
+        self.d['skirting_repeat'] = self.d['repeat']
+        self.d['skirting_color'] = self.d['color']
+        #looks for finishing
         self.finish_obj = False
-        if self.d['FINISHING']:#looks for finishing
+        if self.d['FINISHING']:
             try:
                 self.finish_obj = finishings.get(title = self.d['FINISHING'])
             except:
