@@ -1425,19 +1425,19 @@ class AFurniture(object):
         self.leg = self.d["43"]-0.025*unit(self.d["43"])
         #first leg
         outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-1" \n'
-        outstr += f'position="{0.05*unit(self.d["41"])} {leg/2} {-0.05*unit(self.d["42"])}" \n'
+        outstr += f'position="{0.05*unit(self.d["41"])} {self.leg/2} {-0.05*unit(self.d["42"])}" \n'
         outstr += self.close_leg()
         #second leg
         outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-2" \n'
-        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {leg/2} {-0.05*unit(self.d["42"])}" \n'
+        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {self.leg/2} {-0.05*unit(self.d["42"])}" \n'
         outstr += self.close_leg()
         #third leg
         outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-3" \n'
-        outstr += f'position="{0.05*unit(self.d["41"])} {leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
+        outstr += f'position="{0.05*unit(self.d["41"])} {self.leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
         outstr += self.close_leg()
         #fourth leg
         outstr += f'<a-cylinder id="{self.d["2"]}-{self.d["num"]}-leg-4" \n'
-        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
+        outstr += f'position="{self.d["41"]-0.05*unit(self.d["41"])} {self.leg/2} {-self.d["42"]+0.05*unit(self.d["42"])}" \n'
         outstr += self.close_leg()
         #close entity
         outstr += '</a-entity>\n'
