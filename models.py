@@ -50,7 +50,7 @@ class PymbakeFinishingPage(Page):
         )
     skirting_pattern = models.BooleanField(default=False,  help_text="Is it a 1x1 meter pattern?",)
     skirting_color = models.CharField(max_length=250, default="white", help_text="Accepts hex (#ffffff) or HTML color",)
-
+    shadows = False#we need this
     search_fields = Page.search_fields + [
         index.SearchField('introduction'),
     ]
@@ -97,7 +97,7 @@ class PymbakeFinishingPage(Page):
                 data['finishing'] = self.title
                 collection[x] = data
             elif data['2'] == 'a-furniture':
-                data['finishing'] = self.title
+                data['FINISHING'] = self.title
                 collection[x] = data
             elif data['2'] == 'a-slab':
                 data['floor'] = self.title
