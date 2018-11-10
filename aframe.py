@@ -1361,7 +1361,7 @@ class AFurniture(object):
         self.finish_obj = False
         if self.d['FINISHING']:#looks for finishing
             try:
-                self.finish_obj = finishings.get(title = self.d['finishing'])
+                self.finish_obj = finishings.get(title = self.d['FINISHING'])
             except:
                 pass
 
