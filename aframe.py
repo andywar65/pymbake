@@ -732,7 +732,7 @@ def make_light(page_obj, x, data):
 class APartition(object):
     def __init__(self, page_obj, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
-        self.page_obj = page_obj
+        self.page_obj = page_obj.specific
         self.d['alert'] = 'None'
         self.type_obj = False
         if self.d['type']:
@@ -1185,7 +1185,7 @@ class APartition(object):
 class AOpening(object):#face it, this could be a APartition subclass
     def __init__(self, page_obj, data, types, finishings, csv_f):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
-        self.page_obj = page_obj
+        self.page_obj = page_obj.specific
         self.d['alert'] = 'None'#sets alert default
         self.d['frame_image'] = ''#sets frame defaults
         self.d['frame_pattern'] = ''
@@ -1359,7 +1359,7 @@ class AOpening(object):#face it, this could be a APartition subclass
 class AFurniture(object):
     def __init__(self, page_obj, data, finishings):
         self.d = data#is it possible to use the self.__dict__=data construct? it would be much cleaner
-        self.page_obj = page_obj
+        self.page_obj = page_obj.specific
         #dummy values
         self.d['tiling_image'] = self.d['8']
         self.d['tiling_repeat'] = self.d['repeat']

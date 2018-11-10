@@ -50,7 +50,7 @@ class PymbakeFinishingPage(Page):
         )
     skirting_pattern = models.BooleanField(default=False,  help_text="Is it a 1x1 meter pattern?",)
     skirting_color = models.CharField(max_length=250, default="white", help_text="Accepts hex (#ffffff) or HTML color",)
-    shadows = False#we need this
+    
     search_fields = Page.search_fields + [
         index.SearchField('introduction'),
     ]
@@ -110,7 +110,7 @@ class PymbakeFinishingPage(Page):
 
         partitions = ''
         finishings = PymbakeFinishingPage.objects#how can I restrict to self?TO DO
-        output = aframe.make_html(self, collection, partitions, finishings, csv_f)
+        output = aframe.make_html(self.get_parent(), collection, partitions, finishings, csv_f)
         csv_f.close()
 
         return output
