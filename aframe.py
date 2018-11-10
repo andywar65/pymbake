@@ -712,7 +712,11 @@ def make_light(page_obj, x, data):
             outstr += f'light="type: directional; color: {data["color"]}; intensity: {data["intensity"]}; '
             if page_obj.shadows:
                 outstr += 'castShadow: true; '
-            outstr += f'target: #dxf-ent;"> \n' #light-{x}-target
+            outstr += f'shadowCameraBottom: {-5*fabs(data["42"])}; \n'
+            outstr += f'shadowCameraLeft: {-5*fabs(data["41"])}; \n'
+            outstr += f'shadowCameraTop: {5*fabs(data["42"])}; \n'
+            outstr += f'shadowCameraRight: {5*fabs(data["41"])}; \n'
+            outstr += f'target: #light-{x}-target;"> \n'
             outstr += f'<a-entity id="light-{x}-target" position="0 -1 0"> </a-entity> \n'
     except KeyError:#default if no light type is set
         outstr += 'light="type: point; intensity: 0.75; distance: 50; decay: 2; '
